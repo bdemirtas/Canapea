@@ -1,0 +1,44 @@
+import subprocess
+import time
+
+import pytest
+
+from canapea.model import DefaultTypes
+from canapea.couchdb import CouchDB
+
+
+@pytest.fixture(scope='module')
+def docker_couchdb():
+    port = '5984'
+    password='canapea'
+    user='canapea'
+
+    docker_id = subprocess.check_output(
+        [
+                'docker',
+            'run',
+            '-e',
+            f'COUCHDB_USER={user}',
+            '-e',
+            f'COUCHDB_PASSWORD={password}',
+            '-p',
+            f'{port}:{port}',
+            '-d',
+            'couchdb:2.3.0',
+        ]).decode().strip()
+
+    time.sleep(5)
+
+    yield f'http://127.0.0.1:{port}'
+
+    subprocess.check_call(['docker', 'rm', '-f', docker_id])
+
+
+@pytest.fixture
+def couchdb_connection(docker_couchdb):
+    database = CouchDB('canapea', 'canapea', docker_couchdb)
+    database.connection.create_database(DefaultTypes.USER)
+
+    yield database
+
+    database.connection.delete_database(DefaultTypes.USER)
