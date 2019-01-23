@@ -32,7 +32,7 @@ class EntityAbstractClass(ABC):
 
     @classmethod
     @abstractmethod
-    def get(cls):
+    def get(cls, id):
         raise NotImplementedError("Subclasses should implement this!")
 
     @classmethod

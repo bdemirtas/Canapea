@@ -3,8 +3,8 @@ import time
 
 import pytest
 
+from canapea.connection import connection
 from canapea.model import DefaultTypes
-from canapea.couchdb import CouchDB
 
 
 @pytest.fixture(scope='module')
@@ -15,7 +15,7 @@ def docker_couchdb():
 
     docker_id = subprocess.check_output(
         [
-                'docker',
+            'docker',
             'run',
             '-e',
             f'COUCHDB_USER={user}',
@@ -34,9 +34,9 @@ def docker_couchdb():
     subprocess.check_call(['docker', 'rm', '-f', docker_id])
 
 
-@pytest.fixture
-def couchdb_connection(docker_couchdb):
-    database = CouchDB('canapea', 'canapea', docker_couchdb)
+@pytest.fixture(autouse=True)
+def open_connection(docker_couchdb):
+    database = connection('canapea', 'canapea', docker_couchdb)
     database.connection.create_database(DefaultTypes.USER)
 
     yield database

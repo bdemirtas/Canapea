@@ -3,6 +3,7 @@ import logging
 from uuid import uuid4
 
 from canapea import EntityAbstractClass
+from canapea.connection import get_connection
 from canapea.utils import to_dict
 
 
@@ -19,9 +20,9 @@ def _instance_type(_instance):
 class Entity(EntityAbstractClass):
     """Representing a CouchDB document."""
 
-    def __init__(self, database, _id, type):
+    def __init__(self, _id, type, alias=None):
         self._id = _id or str(uuid4())
-        self.database = database
+        self.database = get_connection(alias)
         self.__class__.database = self.database
         self.type = type
 
@@ -40,9 +41,7 @@ class Entity(EntityAbstractClass):
     @classmethod
     def create(cls, entity):
         """Create document from entity dict."""
-        return cls(
-            database=cls.database,
-            **cls.database.create(_class_type(cls), entity))
+        return cls(**cls.database.create(_class_type(cls), entity))
 
     def delete(self):
         """Delete document itself."""
@@ -68,7 +67,7 @@ class Entity(EntityAbstractClass):
         entity = cls.database.get(class_name, id)
         if not entity:
             logging.error('{} [{}] not found'.format(class_name, id))
-        return cls(database=cls.database, **entity)
+        return cls(**entity)
 
     @classmethod
     def insert_bulks_docs(cls, entities):
@@ -79,7 +78,7 @@ class Entity(EntityAbstractClass):
     @classmethod
     def list(cls):
         """List all documents."""
-        return [cls(database=cls.database, **entity) for entity in
+        return [cls(**entity) for entity in
                 cls.database.list(_class_type(cls))]
 
     def update(self):
