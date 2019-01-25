@@ -4,7 +4,7 @@ import time
 import pytest
 
 from canapea.connection import connection
-from canapea.model import DefaultTypes
+from tests.integration.model import DefaultTypes
 
 
 @pytest.fixture(scope='module')

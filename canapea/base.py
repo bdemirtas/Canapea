@@ -25,6 +25,7 @@ class Entity(EntityAbstractClass):
         self.database = get_connection(alias)
         self.__class__.database = self.database
         self.type = type
+        self.attachments = {}
 
     @property
     def id(self):
@@ -37,6 +38,7 @@ class Entity(EntityAbstractClass):
         cls._id = _id or str(uuid4())
         cls.database = database
         cls.type = type
+        cls.attachments = {}
 
     @classmethod
     def create(cls, entity):
@@ -58,7 +60,7 @@ class Entity(EntityAbstractClass):
         results = cls.database.fetch_bulks_docs(
             _class_type(cls), ids, include_docs=include_docs)
 
-        return [cls(_class_type(cls), **result) for result in results]
+        return [cls(**result) for result in results]
 
     @classmethod
     def get(cls, id):
@@ -84,6 +86,14 @@ class Entity(EntityAbstractClass):
     def update(self):
         """Update document itself by changing attributes."""
         return self.database.update(_instance_type(self), self)
+
+    def put_attachment(self, name, file, content_type):
+        self.attachments = self.database.put_attachment(
+            _instance_type(self), self.id, name, file, content_type)
+
+    def delete_attachment(self, name):
+        self.attachments = self.database.delete_attachment(
+            _instance_type(self), self.id, name)
 
     def __repr__(self):
         return json.dumps(to_dict(self))

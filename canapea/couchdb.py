@@ -100,16 +100,14 @@ class CouchDB:
         """Check if the document exist or not."""
         return cls.db(type)[id] is None
 
-    @classmethod
-    def put_attachment(cls, type, id, path, name, content_type):
+    def put_attachment(self, type, id, name, file, content_type):
         """Insert an attachment file to a document."""
-        if content_type not in ['text', 'binary']:
-            raise TypeError(
-                f'Content Type {content_type} error. Can be be text or binary')
+        self.db(type)[id].put_attachment(
+            attachment=name,
+            content_type=content_type,
+            data=file)
+        return self.db(type)[id]['_attachments']
 
-        with open(path, 'r') as file:
-            read_data = file.read()
-            cls.db(type)[id].push_atachment(
-                attachment=name,
-                content_type=content_type,
-                data=read_data)
+    def delete_attachment(self, type, id, name):
+        self.db[type][id].delete_attachment(name)
+        return self.db(type)[id]['_attachments']

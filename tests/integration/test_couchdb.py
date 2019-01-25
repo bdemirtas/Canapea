@@ -1,4 +1,4 @@
-from canapea.model import User
+from tests.integration.model import User
 
 
 def make_user(data):
@@ -63,19 +63,24 @@ def test_fetch_bulks_docs_with_include_docs():
     user2 = make_user({'name': 'imagia2'})
 
     users = user_model.fetch_bulks_docs(
-        ids=[user1.id, user2.id])
+        ids=[user1.id, user2.id],
+        include_docs=True)
 
     assert len(users) == 2
 
 
 def test_exist():
-    user_model = User()
     user1 = make_user({'name': 'imagia1'})
 
-    assert user_model.exist(user1.id) is True
+    assert User.exist(user1.id) is True
 
 
 def test_dont_exist():
     user_model = User()
 
     assert user_model.exist('1a7d5b3896653fd699b747472c000ba6') is False
+
+
+def test_put_attachment():
+    user = make_user({'name': 'imagia1'})
+    user.put_attachment('test', b'sad', content_type='text')

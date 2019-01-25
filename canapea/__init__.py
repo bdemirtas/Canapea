@@ -49,3 +49,7 @@ class EntityAbstractClass(ABC):
     @abstractmethod
     def update(cls):
         raise NotImplementedError("Subclasses should implement this!")
+
+    @abstractmethod
+    def put_attachment(self, name, file, content_type):
+        raise NotImplementedError("Subclasses should implement this!")
