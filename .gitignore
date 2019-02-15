@@ -12,3 +12,4 @@
 .tox/
 .xprocess/
 /build/
+/pip-wheel-metadata/

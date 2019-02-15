@@ -13,7 +13,8 @@ def get_connection(alias=None) -> CouchDB:
         return connections[alias]
 
 
-def register_connection(alias, username, password, url='http://localhost:5984'):
+def register_connection(alias, username, password,
+                        url='http://localhost:5984'):
     connection = CouchDB(username, password, url)
     connections[alias] = connection
     return connection
