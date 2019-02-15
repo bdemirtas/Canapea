@@ -4,11 +4,11 @@ Use Cloudant CouchDB client.
 """
 from functools import partial
 
+from canapea.utils import to_dict
+
 from cloudant.client import CouchDB as Cloudant
 from cloudant.database import CouchDatabase
 from cloudant.query import Query
-
-from canapea.utils import to_dict
 
 
 class CouchDB:
