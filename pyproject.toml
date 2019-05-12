@@ -23,6 +23,9 @@ classifier = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
+pytest = "^4.5"
+pytest-cov = "^2.7"
+flake8 = "^3.7"
 
 [tool.poetry.dev-dependencies]
 cloudant = "^2.0.0"

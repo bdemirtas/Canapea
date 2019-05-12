@@ -10,8 +10,8 @@ from tests.integration.model import DefaultTypes
 @pytest.fixture(scope='module')
 def docker_couchdb():
     port = '5984'
-    password='canapea'
-    user='canapea'
+    password = 'canapea'
+    user = 'canapea'
 
     docker_id = subprocess.check_output(
         [

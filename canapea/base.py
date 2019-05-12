@@ -22,7 +22,7 @@ class Entity(EntityAbstractClass):
 
     def __init__(self, _id, type, alias=None):
         self._id = _id or str(uuid4())
-        self.database = get_connection(alias)
+        self.database = get_connection()
         self.__class__.database = self.database
         self.type = type
         self.attachments = {}
