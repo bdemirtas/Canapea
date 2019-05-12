@@ -1,4 +1,11 @@
 language: python
+dist: xenial
+addons:
+  apt:
+    sources:
+      - docker-xenial
+    packages:
+    - docker
 python:
 - 3.7.3
 before_install:
@@ -7,4 +14,4 @@ install:
 - poetry install
 script:
 - poetry run flake8 canapea test
-- poetry pytest --cov=canapea tests/
+- poetry run pytest --cov=canapea tests/
